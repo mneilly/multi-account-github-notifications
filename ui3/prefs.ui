@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+    <object class="GtkAdjustment" id="adjustment1">
+        <property name="upper">60000</property>
+        <property name="step_increment">1</property>
+        <property name="page_increment">10</property>
+    </object>
+    <template class="PrefsWidget" parent="GtkBox">
+        <property name="visible">True</property>
+        <property name="width-request">800</property>
+        <property name="height-request">600</property>
+        <child>
+            <object class="GtkNotebook">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="halign">fill</property>
+                <property name="tab-pos">left</property>
+                <child>
+                    <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">10</property>
+                        <child>
+                            <object class="GtkBox" id="ButtonBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="spacing">4</property>
+                                <child>
+                                    <object class="GtkButton" id="addAccountButton">
+                                        <property name="label" translatable="yes">Add Account</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                    </object>
+                                    <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                    </packing>
+                                </child>
+                                <child>
+                                    <object class="GtkButton" id="deleteAccountButton">
+                                        <property name="label" translatable="yes">Delete Selected</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                    </object>
+                                    <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                    </packing>
+                                </child>
+                            </object>
+                            <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">0</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkBox" id="AccountsBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                    <object class="GtkBox" id="accountsSubBox">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="margin-start">10</property>
+                                        <property name="margin-end">10</property>
+                                        <property name="margin-top">10</property>
+                                        <property name="margin-bottom">10</property>
+                                        <property name="orientation">vertical</property>
+                                    </object>
+                                    <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                    </packing>
+                                </child>
+                            </object>
+                            <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                            </packing>
+                        </child>
+                    </object>
+                </child>
+                <child type="tab">
+                    <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Accounts</property>
+                    </object>
+                    <packing>
+                        <property name="tab-fill">False</property>
+                    </packing>
+                </child>
+                <child>
+                    <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="row-spacing">10</property>
+                        <property name="column-spacing">10</property>
+                        <child>
+                            <object class="GtkSwitch" id="hideIfNone">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="halign">start</property>
+                                <property name="valign">start</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">0</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Hide widget when there are no notifications
+                                </property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">0</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkSwitch" id="hideCount">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="halign">start</property>
+                                <property name="valign">start</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">1</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkSwitch" id="participatingOnly">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="halign">start</property>""
+                                <property name="valign">start</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">2</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkSwitch" id="showAlert">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="halign">start</property>
+                                <property name="valign">start</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">3</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Hide notification count</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">1</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Participating only</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">2</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Show alert for notifications</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">3</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkSpinButton">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="input-purpose">number</property>
+                                <property name="orientation">vertical</property>
+                                <property name="adjustment">adjustment1</property>
+                                <property name="numeric">True</property>
+                                <property name="update-policy">if-valid</property>
+                                <property name="value">60</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">4</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Update interval</property>
+                            </object>
+                            <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">4</property>
+                            </packing>
+                        </child>
+                    </object>
+                    <packing>
+                        <property name="position">1</property>
+                    </packing>
+                </child>
+                <child type="tab">
+                    <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Options</property>
+                    </object>
+                    <packing>
+                        <property name="position">1</property>
+                        <property name="tab-fill">False</property>
+                    </packing>
+                </child>
+                <child>
+                    <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">10</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                            <object class="GtkGrid">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="row-spacing">10</property>
+                                <child>
+                                    <object class="GtkFrame">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="label-xalign">0</property>
+                                        <property name="shadow-type">in</property>
+                                        <child>
+                                            <object class="GtkAlignment">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="left-padding">12</property>
+                                                <child>
+                                                    <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="halign">fill</property>
+                                                        <property name="valign">center</property>
+                                                        <property name="xpad">10</property>
+                                                        <property name="label" translatable="yes">Click the "Add Account" button to create a new account.
+
+The "Login" field should be filled in with your Github user name.
+
+To enable the extension to access your Github notifications, you will need to create a Personal Access Token.
+
+See: &lt;a href=&quot;https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token&quot;&gt;Creating a personal access token&lt;/a&gt;
+
+Be sure to select the "notifications" scope in step 8. Paste your token into the "API Token" field.
+
+The "Domain" field can normally be left as github.com unless your company has an enterprise account in which case you should talk to your company administrator.
+
+Each account can have a command associated with it. If you only have a single account you can leave command empty and the extension will launch the default browser when selecting notifications in the menu.
+
+If you have multiple accounts, the extension needs to be told how to open links for each account.
+
+For example, if you are using Google Chrome and have a work and a personal GH account you might set the commands to open a difference chrome profile for each github account. E.g. - &lt;i&gt;google-chrome --profile-directory=Default&lt;/i&gt; and &lt;i&gt;google-chrome --profile-directory='Profile 1'&lt;/i&gt;.
+
+In Firefox, you might setup profiles using about:profile then launch a specific profile with &lt;i&gt;firefox -P default&lt;/i&gt;.
+
+If you have multiple accounts, you may want to choose a color for each account. This will put a 2 pixel color bar above each Github icon as a way to identify which icon belongs to which account.
+                                                        </property>
+                                                        <property name="use-markup">True</property>
+                                                        <property name="wrap">True</property>
+                                                    </object>
+                                                </child>
+                                            </object>
+                                        </child>
+                                        <child type="label">
+                                            <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="xpad">10</property>
+                                                <property name="ypad">5</property>
+                                                <property name="label" translatable="yes">Accounts</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                    <packing>
+                                        <property name="left-attach">0</property>
+                                        <property name="top-attach">0</property>
+                                    </packing>
+                                </child>
+                                <child>
+                                    <object class="GtkFrame">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">False</property>
+                                        <property name="label-xalign">0</property>
+                                        <property name="shadow-type">in</property>
+                                        <child>
+                                            <object class="GtkAlignment">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="left-padding">12</property>
+                                                <child>
+                                                    <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="halign">fill</property>
+                                                        <property name="valign">center</property>
+                                                        <property name="xpad">10</property>
+                                                        <property name="label" translatable="yes">
+                                                        </property>
+                                                        <property name="use-markup">True</property>
+                                                        <property name="wrap">True</property>
+                                                    </object>
+                                                </child>
+p                                            </object>
+                                        </child>
+                                        <child type="label">
+                                            <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="can-focus">False</property>
+                                                <property name="xpad">10</property>
+                                                <property name="ypad">5</property>
+                                                <property name="label" translatable="yes">Options</property>
+                                            </object>
+                                        </child>
+                                    </object>
+                                    <packing>
+                                        <property name="left-attach">0</property>
+                                        <property name="top-attach">1</property>
+                                    </packing>
+                                </child>
+                            </object>
+                            <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                            </packing>
+                        </child>
+                    </object>
+                    <packing>
+                        <property name="position">2</property>
+                    </packing>
+                </child>
+                <child type="tab">
+                    <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="label" translatable="yes">Help</property>
+                    </object>
+                    <packing>
+                        <property name="position">2</property>
+                        <property name="tab-fill">False</property>
+                    </packing>
+                </child>
+            </object>
+        </child>
+    </template>
+</interface>

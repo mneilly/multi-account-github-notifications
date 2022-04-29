@@ -1,0 +1,8 @@
+.idea
+.git
+sync.sh
+rsync-excludes.txt
+stylesheet.css
+warning.svg
+prefs2.ui
+prefs3.ui

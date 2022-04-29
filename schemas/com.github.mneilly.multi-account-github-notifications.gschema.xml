@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <schema id="com.github.mneilly.multi-account-github-notifications"
+            path="/com/github/mneilly/multi-account-github-notifications/"
+            gettext-domain="multi-account-github-notifications"
+    >
+        <key name="num-accounts" type="i">
+            <default>1</default>
+            <summary>Number of accounts</summary>
+            <description>Indicates the number of accounts</description>
+        </key>
+        <key name="login" type="as">
+            <default>['', '', '', '', '', '', '', '', '', '']</default>
+            <summary>Your github login</summary>
+        </key>
+        <key name="domain" type="as">
+            <default>['github.com', 'github.com', 'github.com', 'github.com', 'github.com', 'github.com', 'github.com', 'github.com', 'github.com', 'github.com']</default>
+            <summary>Your github domain</summary>
+            <description>Change this variable only if you are using GitHub Enterprise</description>
+        </key>
+        <key name="token" type="as">
+            <default>['', '', '', '', '', '', '', '', '', '']</default>
+            <summary>Your github token</summary>
+            <description>To get your token go to https://github.com/settings/tokens and create a token, making sure you
+                authorize it to access your notifications
+            </description>
+        </key>
+        <key name="command" type="as">
+            <default>['', '', '', '', '', '', '', '', '', '']</default>
+            <summary>Command to open nofification URL</summary>
+            <description>Runs the specified command to open notifications. E.g. - google-chrome
+                --profile-directory="Default"
+            </description>
+        </key>
+        <key name="color" type="as">
+            <default>['', '', '', '', '', '', '', '', '', '']</default>
+            <summary>Account color</summary>
+            <description>A line of this color will be displayed above the notifier icon to distinguish different
+                accounts
+            </description>
+        </key>
+        <key name="palette" type="as">
+            <default>['red', 'green', 'blue', 'orange', 'yellow', 'purple', 'brown', 'gray', 'white', 'cyan']</default>
+            <summary>Account color</summary>
+            <description>A line of this color will be displayed above the notifier icon to distinguish different
+                accounts
+            </description>
+        </key>
+        <key name="icon-set" type="i">
+            <default>1</default>
+            <summary>The icon set to use</summary>
+        </key>
+        <key name="hide-widget" type="b">
+            <default>false</default>
+            <summary>Hide widget when there are no notifications</summary>
+        </key>
+        <key name="hide-notification-count" type="b">
+            <default>false</default>
+            <summary>Hide notification count</summary>
+        </key>
+        <key name="refresh-interval" type="i">
+            <default>60</default>
+            <summary>The refresh interval in seconds</summary>
+            <description>The refresh interval used by the extension. If this number is smaller than the header returned by github, it will be ignored and the header will take precedence. See https://developer.github.com/v3/activity/notifications/</description>
+        </key>
+        <key name="show-alert" type="b">
+            <default>false</default>
+            <summary>Show notifications alert</summary>
+        </key>
+        <key name="filter" type="s">
+            <default>"none"</default>
+            <summary>Filter for notifications.</summary>
+        </key>
+    </schema>
+</schemalist>

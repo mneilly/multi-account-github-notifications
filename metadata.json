@@ -1,0 +1,6 @@
+{
+  "name": "Multi-account GitHub Notifications",
+  "description": "Notifies the user when there are GitHub notifications.",
+  "uuid": "multi-account-github-notifications@mneilly.github.com",
+  "shell-version": [ "3.36", "3.38", "40", "41", "42" ]
+}
