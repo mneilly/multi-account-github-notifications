@@ -28,12 +28,15 @@ const Lang = imports.lang;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
 const Mainloop = imports.mainloop;
+const ByteArray = imports.byteArray;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Soup = imports.gi.Soup;
 
 const Settings = ExtensionUtils.getSettings('com.github.mneilly.multi-account-github-notifications');
 const DEBUG = true;
+let { PACKAGE_VERSION } = imports.misc.config;
+PACKAGE_VERSION = Number(PACKAGE_VERSION);
 
 // Message wrappers
 
@@ -77,25 +80,32 @@ const ICON_WARNING = 1
 const STATUS_NORMAL = 0
 const STATUS_WARNING = 1
 
-const Indicator = GObject.registerClass(
+const Indicator =
+GObject.registerClass(
     /**
      * The main indicator widget that gets put in the status bar.
      */
     class Indicator extends PanelMenu.Button {
 
-        static lastIconSet = 0; // stores the last loaded icon set number
+        // static lastIconSet = 0; // stores the last loaded icon set number
 
         _init(id) {
             debug("_init: enter\n");
             super._init(0.0, _(`Github Notification ${id}`));
+
             this.accountId = id;
             this.notifications = [];
             this.status = STATUS_NORMAL;
+            this.retryAttempts = 0;
+            this.authUri = null;
+
+            this.color = 'black'
+            this.lastIconSet = 0;
 
             // Get settings needed for init
             let login = Settings.get_strv('login')[this.accountId];
             let filter = Settings.get_string('filter');
-            this.iconSet = Settings.get_boolean('icon-set');
+            this.iconSet = Settings.get_int('icon-set');
 
             // Setup icons
             this.loadIcons();
@@ -113,6 +123,7 @@ const Indicator = GObject.registerClass(
                 can_focus: true,
                 track_hover: true
             });
+
             this.label = new St.Label({
                 text: '' + this.notifications.length,
                 style_class: 'system-status-icon'
@@ -245,17 +256,29 @@ const Indicator = GObject.registerClass(
         reloadSettings() {
             debug("reloadSettings: enter\n");
             this.domain = Settings.get_strv('domain')[this.accountId];
+            // debug(`domain: ${this.domain}\n`);
             this.token = Settings.get_strv('token')[this.accountId];
+            // debug(`token: ${this.token}\n`);
             this.login = Settings.get_strv('login')[this.accountId];
+            // debug(`login: ${this.login}\n`);
             this.color = Settings.get_strv('color')[this.accountId];
+            // debug(`color: ${this.color}\n`);
             this.command = Settings.get_strv('command')[this.accountId];
+            // debug(`command: ${this.command}\n`);
             this.iconSet = Settings.get_int('icon-set');
+            // debug(`iconSet: ${this.iconSet}\n`);
             this.hideWidget = Settings.get_boolean('hide-widget');
+            // debug(`hideWidget: ${this.hideWidget}\n`);
             this.hideCount = Settings.get_boolean('hide-notification-count');
+            // debug(`hideCount: ${this.hideCount}\n`);
             this.refreshInterval = Settings.get_int('refresh-interval');
+            // debug(`refreshInterval: ${this.refreshInterval}\n`);
             this.githubInterval = this.refreshInterval;
+            // debug(`githubInterval: ${this.githubInterval}\n`);
             this.showAlertNotification = Settings.get_boolean('show-alert');
-            this.filter = Settings.get_boolean('filter');
+            // debug(`showAlertNotification: ${this.showAlertNotification}\n`);
+            this.filter = Settings.get_string('filter');
+            // debug(`filter: ${this.filter}\n`);
             this.checkVisibility();
             debug("reloadSettings: done\n");
         }
@@ -284,10 +307,29 @@ const Indicator = GObject.registerClass(
             debug("stopLoop: done\n");
         }
 
-        getUrl() {
+        getUri(use_api=true) {
             let url = `https://api.${this.domain}/notifications`;
+            if (!use_api) {
+                url = `https://${this.domain}/notifications`;
+            }
             if (this.filter !== "none") {
                 url = `${url}?query=reason%3A${this.filter}`;
+            }
+            let uri;
+            if (PACKAGE_VERSION >= 43) {
+                uri = GLib.Uri.parse(url, GLib.UriFlags.NONE);
+            } else {
+                uri = new Soup.URI(url);
+            }
+            return uri;
+        }
+
+        getUrl(uri) {
+            let url;
+            if (PACKAGE_VERSION >= 43) {
+                url = uri.to_string();
+            } else {
+                url = uri.toString();
             }
             return url;
         }
@@ -297,13 +339,19 @@ const Indicator = GObject.registerClass(
          */
         showBrowserUri() {
             debug("showBrowserUri: enter\n");
-            let url = this.getUrl();
+            let uri = this.getUri(false);
+            let url = this.getUrl(uri);
             try {
                 if (this.command) {
                     let cmd = this.command + " " + url;
                     GLib.spawn_command_line_sync(cmd);
+                    // const proc = Gio.Subprocess.new(
+                    //     this.command.split(" "),
+                    //     Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE
+                    // );
                 } else {
-                    Gtk.show_uri(null, url, Gtk.get_current_event_time());
+                    let timestamp = PACKAGE_VERSION >= 43 ? Gtk.CURRENT_TIME : Gtk.get_current_event_time();
+                    Gtk.show_uri(null, url, timestamp);
                 }
             } catch (e) {
                 error("Cannot open uri " + e)
@@ -311,36 +359,55 @@ const Indicator = GObject.registerClass(
             debug("showBrowserUri: done\n");
         }
 
+        getHost(uri) {
+            if (PACKAGE_VERSION >= 43) {
+                debug(uri.get_hostname());
+                return uri.get_hostname();
+            } else {
+                debug(uri.get_host());
+                return uri.get_host();
+            }
+        }
+
         /**
          *
          */
-        initHttp() {
-            debug("initHttp: enter\n");
-            let url = this.getUrl();
 
+        initHttp() {
             this.status = STATUS_NORMAL;
             if (!this.login || !this.token) {
                 this.status = STATUS_WARNING;
                 return;
             }
 
-            this.authUri = new Soup.URI(url);
-            this.authUri.set_user(this.login);
-            this.authUri.set_password(this.token);
+            let uri = this.getUri();
+            this.authUri = uri;
 
             if (this.httpSession) {
                 this.httpSession.abort();
             } else {
                 this.httpSession = new Soup.Session();
-                this.httpSession.user_agent = 'gnome-shell-extension github notification via libsoup';
+                this.httpSession.user_agent =
+                    'gnome-shell-extension github notification via libsoup';
 
-                this.authManager = new Soup.AuthManager();
-                this.auth = new Soup.AuthBasic({host: 'api.' + this.domain, realm: 'Github Api'});
-
-                this.authManager.use_auth(this.authUri, this.auth);
-                Soup.Session.prototype.add_feature.call(this.httpSession, this.authManager);
+                if (PACKAGE_VERSION >= 43) {
+                    this.auth = new Soup.AuthBasic();
+                    this.auth.authenticate(this.login, this.token);
+                } else {
+                    this.authUri.set_user(this.login);
+                    this.authUri.set_password(this.token);
+                    this.auth = new Soup.AuthBasic({
+                        host: this.getHost(uri),
+                        realm: 'Github Api',
+                    });
+                    this.authManager = new Soup.AuthManager();
+                    this.authManager.use_auth(this.authUri, this.auth);
+                    Soup.Session.prototype.add_feature.call(
+                        this.httpSession,
+                        this.authManager
+                    );
+                }
             }
-            debug("initHttp: done\n");
         }
 
         /**
@@ -363,80 +430,174 @@ const Indicator = GObject.registerClass(
             debug("planFetch: done\n");
         }
 
+        getLastModified(response) {
+            if (PACKAGE_VERSION >= 43) {
+                if (response.get_response_headers().get_one('Last-Modified')) {
+                    return response.get_response_headers().get_one('Last-Modified');
+                }
+            } else {
+                if (response.response_headers.get('Last-Modified')) {
+                    return response.response_headers.get('Last-Modified');
+                }
+            }
+            return null;
+        }
+
+        getXPollInterval(response) {
+            if (PACKAGE_VERSION >= 43) {
+                if (response.get_response_headers().get_one('X-Poll-Interval')) {
+                    return response
+                        .get_response_headers()
+                        .get_one('X-Poll-Interval');
+                }
+            } else {
+                if (response.response_headers.get('X-Poll-Interval')) {
+                    return response.response_headers.get('X-Poll-Interval');
+                }
+            }
+            return null;
+        }
+
+        getMessageBody(r) {
+            let body;
+            if (PACKAGE_VERSION >= 43) {
+                body = this.httpSession.send_and_read_finish(r);
+                body = body.get_data();
+                body = ByteArray.toString(body);
+            } else {
+                body = r.response_body.data;
+            }
+            return body;
+        }
+
+        processResponse(status, message, response) {
+            try {
+                if (status === 200 || status === 304) {
+                    this.lastModified = this.getLastModified(message);
+                    this.githubInterval = this.getXPollInterval(message);
+                    this.planFetch(this.interval(), false);
+                    if (status === 200) {
+                        let data = JSON.parse(this.getMessageBody(response));
+                        this.updateNotifications(data);
+                    }
+                } else if (status === 401) {
+                    error(
+                        'Unauthorized. Check your github handle and token in the settings'
+                    );
+                    this.planFetch(this.interval(), true);
+                    this.label.set_text('!');
+                } else if (!message.message_body.data && status > 400) {
+                    error('HTTP error:' + message.get_status());
+                    this.planFetch(this.interval(), true);
+                } else {
+                    // if we reach this point, none of the cases above have been triggered
+                    // which likely means there was an error locally or on the network
+                    // therefore we should try again in a while
+                    error('HTTP error:' + status);
+                    error('message error: ' + JSON.stringify(message));
+                    this.planFetch(this.interval(), true);
+                    this.label.set_text('!');
+                }
+            } catch (e) {
+                error('HTTP exception:' + e);
+            }
+        }
+
         /**
          *
          */
         fetchNotifications() {
-            debug("fetchNotifications: enter\n");
-            if (!this.authUri) {
-                warning("fetchNotifications: no authUri (done)\n");
-                this.status = STATUS_WARNING;
+            if (this.authUri === null) {
                 return;
             }
 
-            let message = new Soup.Message({method: 'GET', uri: this.authUri});
+            if (PACKAGE_VERSION >= 43) {
+                this.fetchNotificationsGnome43();
+            } else {
+                this.fetchNotificationsPreGnome43();
+            }
+        }
+
+        fetchNotificationsGnome43() {
+            let message = new Soup.Message({ method: 'GET', uri: this.authUri });
             if (this.lastModified) {
                 // github's API is currently broken: marking a notification as read won't modify the "last-modified" header
                 // so this is useless for now
                 //message.request_headers.append('If-Modified-Since', this.lastModified);
             }
 
-            this.httpSession.queue_message(message, Lang.bind(this, function (session, response) {
-                this.status = STATUS_NORMAL;
-                try {
-                    if (response.status_code == 200 || response.status_code == 304) {
-                        debug(`fetchNotifications: response code ${response.status_code}\n`);
-                        if (response.response_headers.get('Last-Modified')) {
-                            this.lastModified = response.response_headers.get('Last-Modified');
-                        }
-                        if (response.response_headers.get('X-Poll-Interval')) {
-                            this.githubInterval = response.response_headers.get('X-Poll-Interval');
-                        }
-                        this.planFetch(this.interval(), false);
-                        if (response.status_code == 200) {
-                            let data = JSON.parse(response.response_body.data);
-                            this.updateNotifications(data);
-                            debug("fetchNotifications: 200 done\n");
-                        }
-                        debug("fetchNotifications: 200 or 304 done\n");
-                        return;
-                    }
-                    if (response.status_code == 401) {
-                        error('Unauthorized. Check your github handle and token in the settings');
-                        this.planFetch(this.interval(), true);
-                        this.status = STATUS_WARNING;
-                        debug("fetchNotifications: done\n");
-                        return;
-                    }
-                    if (!response.response_body.data && response.status_code > 400) {
-                        error('HTTP error:' + response.status_code);
-                        this.planFetch(this.interval(), true);
-                        log("fetchNotifications: 400 done\n");
-                        return;
-                    }
-                    // if we reach this point, none of the cases above have been triggered
-                    // which likely means there was an error locally or on the network
-                    // therefore we should try again in a while
-                    error('HTTP error:' + response.status_code);
-                    error('response error: ' + JSON.stringify(response));
-                    this.planFetch(this.interval(), true);
-                    this.status = STATUS_WARNING;
-                    debug("fetchNotifications: done\n");
-                    return;
-                } catch (e) {
-                    log('HTTP exception:' + e);
-                    this.status = STATUS_WARNING;
-                    debug("fetchNotifications: done\n");
-                    return;
+            message.request_headers.append(
+                'Authorization',
+                this.auth.get_authorization(message)
+            );
+
+
+            this.httpSession.send_and_read_async(
+                message,
+                GLib.PRIORITY_DEFAULT,
+                null,
+                (_, response) => {
+                    let status = message.get_status();
+                    this.processResponse(status, message, response);
                 }
-            }));
-            debug("fetchNotifications: done\n");
+            );
         }
 
-        /**
-         *
-         * @param data
-         */
+        fetchNotificationsPreGnome43() {
+            let message = new Soup.Message({ method: 'GET', uri: this.authUri });
+            if (this.lastModified) {
+                // github's API is currently broken: marking a notification as read won't modify the "last-modified" header
+                // so this is useless for now
+                //message.request_headers.append('If-Modified-Since', this.lastModified);
+            }
+
+            this.httpSession.queue_message(message, (_, response) => {
+                let status = response.status_code;
+                this.processResponse(status, message, response);
+                /*
+                try {
+
+                if (status === 200 || status === 304) {
+                    this.lastModified = this.getLastModified(response);
+                    this.lastModified = this.getXPollInterval(response);
+                    this.planFetch(this.interval(), false);
+                    if (status === 200) {
+                        let data = JSON.parse(this.getMessageBody(response));
+                        this.updateNotifications(data);
+                    }
+                    return;
+                }
+                if (status === 401) {
+                    error(
+                        'Unauthorized. Check your github handle and token in the settings'
+                    );
+                    this.planFetch(this.interval(), true);
+                    this.label.set_text('!');
+                    return;
+                }
+                if (!response.response_body.data && status > 400) {
+                    error('HTTP error:' + status);
+                    this.planFetch(this.interval(), true);
+                    return;
+                }
+                // if we reach this point, none of the cases above have been triggered
+                // which likely means there was an error locally or on the network
+                // therefore we should try again in a while
+                error('HTTP error:' + status);
+                error('response error: ' + JSON.stringify(response));
+                this.planFetch(this.interval(), true);
+                this.label.set_text('!');
+            } catch (e) {
+                error('HTTP exception:' + e);
+            }
+                 */
+            });
+        }
+
+    /**
+     *
+     * @param data
+     */
         updateNotifications(data) {
             debug("updateNotifications: enter\n");
             let lastNotificationsCount = this.notifications.length;

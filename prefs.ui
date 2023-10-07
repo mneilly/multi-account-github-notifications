@@ -2,46 +2,36 @@
 <interface>
     <requires lib="gtk" version="4.0"/>
     <template class="PrefsWidget" parent="GtkBox">
-        <property name="width-request">800</property>
-        <property name="height-request">600</property>
+        <property name="orientation">vertical</property>
         <child>
-            <object class="GtkAdjustment" id="adjustment1">
-                <property name="upper">60000</property>
-                <property name="step-increment">1</property>
-                <property name="page-increment">10</property>
-            </object>
             <object class="GtkNotebook">
-                <property name="focusable">1</property>
-                <property name="halign">fill</property>
-                <property name="valign">fill</property>
                 <property name="tab-pos">left</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="halign">center</property>
                 <child>
                     <object class="GtkNotebookPage">
                         <property name="child">
                             <object class="GtkBox">
-                                <property name="margin-start">10</property>
-                                <property name="margin-end">10</property>
-                                <property name="margin-top">10</property>
-                                <property name="margin-bottom">10</property>
-                                <property name="orientation">vertical</property>
-                                <property name="spacing">10</property>
+                                <property name="hexpand">1</property>
                                 <child>
                                     <object class="GtkLabel">
-                                        <property name="halign">start</property>
-                                        <property name="valign">center</property>
+                                        <property name="valign">start</property>
+                                        <property name="hexpand">1</property>
                                         <property name="label" translatable="yes">
-This extension adds GitHub notification icons to the Gnome top bar. This extension is based upon the original extension by Alex Dufournet at https://github.com/alexduf/gnome-github-notifications.
+This extension adds GitHub notification icons to the Gnome top bar. It is based upon the Github Notifications extension by Alex Dufournet at &lt;a href="https://github.com/alexduf/gnome-github-notifications">https://github.com/alexduf/gnome-github-notifications&lt;/a>.
 
 This version adds:
+- Updated to work with Gnome 43 and 44
 - Support for multiple accounts
-- Internationalization support
 - Use of .ui files for the preferences panel
+- Internationalization support (incomplete)
+- Ability to use your own icon set (incomplete)
                                         </property>
                                         <property name="use-markup">1</property>
                                         <property name="wrap">1</property>
                                     </object>
                                 </child>
-
                             </object>
                         </property>
                         <property name="tab">
@@ -63,6 +53,8 @@ This version adds:
                                 <property name="margin-bottom">10</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">10</property>
+                                <property name="hexpand">1</property>
+                                <property name="vexpand">1</property>
                                 <child>
                                     <object class="GtkBox" id="accountButtonBox">
                                         <property name="valign">center</property>
@@ -81,11 +73,6 @@ This version adds:
                                                 <property name="receives-default">1</property>
                                             </object>
                                         </child>
-                                        <!--
-                                        <child>
-                                        <placeholder/>
-                                        </child>
-                                        -->
                                     </object>
                                 </child>
                                 <child>
@@ -100,150 +87,6 @@ This version adds:
                                                 <property name="margin-top">10</property>
                                                 <property name="margin-bottom">10</property>
                                                 <property name="orientation">vertical</property>
-                                                <!--
-                                                <child>
-                                                    <object class="GtkFrame">
-                                                        <child>
-                                                            <object class="GtkGrid">
-                                                                <property name="margin-start">5</property>
-                                                                <property name="margin-end">5</property>
-                                                                <property name="margin-top">5</property>
-                                                                <property name="margin-bottom">5</property>
-                                                                <property name="row-spacing">5</property>
-                                                                <property name="column-spacing">5</property>
-                                                                <child>
-                                                                    <object class="GtkLabel">
-                                                                        <property name="halign">end</property>
-                                                                        <property name="label" translatable="yes">
-                                                                            Color
-                                                                        </property>
-                                                                        <layout>
-                                                                            <property name="column">0</property>
-                                                                            <property name="row">5</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkLabel">
-                                                                        <property name="halign">end</property>
-                                                                        <property name="label" translatable="yes">
-                                                                            Command
-                                                                        </property>
-                                                                        <layout>
-                                                                            <property name="column">0</property>
-                                                                            <property name="row">4</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkEntry">
-                                                                        <property name="focusable">1</property>
-                                                                        <layout>
-                                                                            <property name="column">1</property>
-                                                                            <property name="row">4</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkLabel">
-                                                                        <property name="halign">end</property>
-                                                                        <property name="label" translatable="yes">
-                                                                            Domain
-                                                                        </property>
-                                                                        <layout>
-                                                                            <property name="column">0</property>
-                                                                            <property name="row">3</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkEntry">
-                                                                        <property name="focusable">1</property>
-                                                                        <layout>
-                                                                            <property name="column">1</property>
-                                                                            <property name="row">3</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkLabel">
-                                                                        <property name="halign">end</property>
-                                                                        <property name="label" translatable="yes">API
-                                                                            Token
-                                                                        </property>
-                                                                        <layout>
-                                                                            <property name="column">0</property>
-                                                                            <property name="row">2</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkEntry">
-                                                                        <property name="focusable">1</property>
-                                                                        <layout>
-                                                                            <property name="column">1</property>
-                                                                            <property name="row">2</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkLabel">
-                                                                        <property name="halign">end</property>
-                                                                        <property name="label" translatable="yes">
-                                                                            Login
-                                                                        </property>
-                                                                        <layout>
-                                                                            <property name="column">0</property>
-                                                                            <property name="row">1</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkEntry">
-                                                                        <property name="focusable">1</property>
-                                                                        <property name="hexpand">1</property>
-                                                                        <layout>
-                                                                            <property name="column">1</property>
-                                                                            <property name="row">1</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkCheckButton">
-                                                                        <property name="label" translatable="yes">
-                                                                            Delete
-                                                                        </property>
-                                                                        <property name="focusable">1</property>
-                                                                        <property name="halign">end</property>
-                                                                        <layout>
-                                                                            <property name="column">0</property>
-                                                                            <property name="row">0</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                                <child>
-                                                                    <object class="GtkColorButton">
-                                                                        <property name="focusable">1</property>
-                                                                        <property name="receives-default">1</property>
-                                                                        <layout>
-                                                                            <property name="column">1</property>
-                                                                            <property name="row">5</property>
-                                                                        </layout>
-                                                                    </object>
-                                                                </child>
-                                                            </object>
-                                                        </child>
-                                                        <child type="label">
-                                                            <object class="GtkLabel">
-                                                                <property name="margin-start">5</property>
-                                                                <property name="margin-end">5</property>
-                                                                <property name="label" translatable="yes">Account 0
-                                                                </property>
-                                                            </object>
-                                                        </child>
-                                                    </object>
-                                                </child>
-                                                -->
                                             </object>
                                         </child>
                                     </object>
@@ -262,10 +105,16 @@ This version adds:
                         <property name="position">2</property>
                         <property name="child">
                             <object class="GtkGrid">
+                                <property name="margin-start">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="margin-top">10</property>
+                                <property name="margin-bottom">10</property>
                                 <property name="halign">center</property>
-                                <property name="valign">center</property>
+                                <property name="valign">start</property>
                                 <property name="row-spacing">10</property>
                                 <property name="column-spacing">10</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
                                 <child>
                                     <object class="GtkSwitch" id="hideIfNone">
                                         <property name="focusable">1</property>
@@ -281,9 +130,7 @@ This version adds:
                                     <object class="GtkLabel">
                                         <property name="halign">start</property>
                                         <property name="hexpand">1</property>
-                                        <property name="label" translatable="yes">Hide widget when there are no
-                                            notifications
-                                        </property>
+                                        <property name="label" translatable="yes">Hide widget when there are no notifications</property>
                                         <layout>
                                             <property name="column">1</property>
                                             <property name="row">0</property>
@@ -327,7 +174,7 @@ This version adds:
                                     <object class="GtkLabel">
                                         <property name="halign">start</property>
                                         <property name="hexpand">1</property>
-                                        <property name="label" translatable="yes">Hide notification count</property>
+                                        <property name="label" translatable="yes">Notification count over icon</property>
                                         <layout>
                                             <property name="column">1</property>
                                             <property name="row">1</property>
@@ -358,9 +205,13 @@ This version adds:
                                     </object>
                                 </child>
                                 <child>
+                                    <object class="GtkAdjustment" id="adjustment1">
+                                        <property name="upper">60000</property>
+                                        <property name="step-increment">1</property>
+                                        <property name="page-increment">10</property>
+                                    </object>
                                     <object class="GtkSpinButton">
                                         <property name="focusable">1</property>
-                                        <!--<property name="input-purpose">number</property>-->
                                         <property name="orientation">vertical</property>
                                         <property name="adjustment">adjustment1</property>
                                         <property name="numeric">1</property>
@@ -383,6 +234,7 @@ This version adds:
                                         </layout>
                                     </object>
                                 </child>
+                                <!--
                                 <child>
                                     <object class="GtkLabel">
                                         <property name="visible">True</property>
@@ -392,75 +244,6 @@ This version adds:
                                         <property name="label" translatable="yes">Message Filter</property>
                                         <layout>
                                             <property name="column">0</property>
-                                            <property name="row">5</property>
-                                        </layout>
-                                    </object>
-                                </child>
-                                <!--
-                                <child>
-                                <object class="GtkPopoverMenu" id="menu1">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="hexpand">True</property>
-                                    <child>
-                                        <object class="GtkMenuItem">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">None</property>
-                                            <property name="use-underline">True</property>
-                                        </object>
-                                    </child>
-                                    <child>
-                                        <object class="GtkMenuItem">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">Participating</property>
-                                            <property name="use-underline">True</property>
-                                        </object>
-                                    </child>
-                                    <child>
-                                        <object class="GtkMenuItem">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">Assigned</property>
-                                            <property name="use-underline">True</property>
-                                        </object>
-                                    </child>
-                                    <child>
-                                        <object class="GtkMenuItem">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">Mentioned</property>
-                                            <property name="use-underline">True</property>
-                                        </object>
-                                    </child>
-                                    <child>
-                                        <object class="GtkMenuItem">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">Team Mentioned</property>
-                                            <property name="use-underline">True</property>
-                                        </object>
-                                    </child>
-                                    <child>
-                                        <object class="GtkMenuItem">
-                                            <property name="visible">True</property>
-                                            <property name="can-focus">False</property>
-                                            <property name="label" translatable="yes">Review Requested</property>
-                                            <property name="use-underline">True</property>
-                                        </object>
-                                    </child>
-                                </object>
-                                </child>
-                                <child>
-                                    <object class="GtkMenuButton" id="messageFilter">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">True</property>
-                                        <property name="focus-on-click">False</property>
-                                        <property name="receives-default">True</property>
-                                        <property name="popup">menu1</property>
-                                        <layout>
-                                            <property name="column">1</property>
                                             <property name="row">5</property>
                                         </layout>
                                     </object>
@@ -485,38 +268,61 @@ This version adds:
                                 <property name="margin-top">10</property>
                                 <property name="margin-bottom">10</property>
                                 <property name="orientation">vertical</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
                                 <child>
                                     <object class="GtkGrid">
                                         <property name="row-spacing">10</property>
                                         <child>
                                             <object class="GtkFrame">
-                                                <!--<property name="shadow-type">in</property>-->
                                                 <child>
                                                     <object class="GtkLabel">
+                                                        <property name="margin-start">10</property>
+                                                        <property name="margin-end">10</property>
+                                                        <property name="margin-top">10</property>
+                                                        <property name="margin-bottom">10</property>
                                                         <property name="halign">start</property>
                                                         <property name="valign">center</property>
                                                         <property name="label" translatable="yes">
 Click the "Add Account" button to create a new account.
 
-The "Login" field should be filled in with your Github user name.
+The "Login" field should be filled in with your Github user
+name.
 
-To enable the extension to access your Github notifications, you will need to create a Personal Access Token.
+To enable the extension to access your Github notifications,
+you will need to create a Personal Access Token.
 
 See: &lt;a href=&quot;https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token&quot;&gt;Creating a personal access token&lt;/a&gt;
 
-Be sure to select the "notifications" scope in step 8. Paste your token into the "API Token" field.
+Be sure to select the "notifications" scope in step 8. Paste
+your token into the "API Token" field.
 
-The "Domain" field can normally be left as github.com unless your company has an enterprise account in which case you should talk to your company administrator.
+The "Domain" field can normally be left as github.com unless
+your company has an enterprise account in which case you
+should talk to your company administrator.
 
-Each account can have a command associated with it. If you only have a single account you can leave command empty and the extension will launch the default browser when selecting notifications in the menu.
+Each account can have a command associated with it. If you
+only have a single account you can leave command empty and
+the extension will launch the default browser when selecting
+notifications in the menu.
 
-If you have multiple accounts, the extension needs to be told how to open links for each account.
+If you have multiple accounts, the extension needs to be
+told how to open links for each account.
 
-For example, if you are using Google Chrome and have both work and a personal GH accounts, you may want to set the commands to open a difference chrome profile for each github account. E.g. - &lt;i&gt;google-chrome --profile-directory=Default&lt;/i&gt; and &lt;i&gt;google-chrome --profile-directory='Profile 1'&lt;/i&gt;.
+For example, if you are using Google Chrome and have both
+work and a personal GH accounts, you may want to set the
+commands to open a difference chrome profile for each github
+account. E.g. -
+&lt;i&gt;google-chrome --profile-directory=Default&lt;/i&gt; and &lt;i&gt;google-chrome --profile-directory='Profile 1'&lt;/i&gt;.
 
-In Firefox, you might setup profiles using about:profile then launch a specific profile with &lt;i&gt;firefox -P default&lt;/i&gt;.
+In Firefox, you might setup profiles using about:profile
+then launch a specific profile with
+&lt;i&gt;firefox -P default&lt;/i&gt;.
 
-If you have multiple accounts, you may want to choose a color for each account. This will put a 2 pixel color bar above each Github icon as a way to identify which icon belongs to which account.
+If you have multiple accounts, you may want to choose a
+color for each account. This will put a 2 pixel color bar
+above each Github icon as a way to identify which icon
+belongs to which account.
                                                         </property>
                                                         <property name="use-markup">1</property>
                                                         <property name="wrap">1</property>
@@ -524,8 +330,6 @@ If you have multiple accounts, you may want to choose a color for each account. 
                                                 </child>
                                                 <child type="label">
                                                     <object class="GtkLabel">
-                                                        <!--<property name="xpad">10</property>-->
-                                                        <!--<property name="ypad">5</property>-->
                                                         <property name="label" translatable="yes">Accounts</property>
                                                     </object>
                                                 </child>
@@ -537,14 +341,24 @@ If you have multiple accounts, you may want to choose a color for each account. 
                                         </child>
                                         <child>
                                             <object class="GtkFrame">
-                                                <!--<property name="shadow-type">in</property>-->
                                                 <child>
                                                     <object class="GtkLabel">
+                                                        <property name="margin-start">10</property>
+                                                        <property name="margin-end">10</property>
+                                                        <property name="margin-top">10</property>
+                                                        <property name="margin-bottom">10</property>
                                                         <property name="halign">start</property>
                                                         <property name="valign">center</property>
-                                                        <!--<property name="xpad">10</property>-->
                                                         <property name="label" translatable="yes">
+Enable &lt;i>Hide widget when there are no notifications&lt;/i> if you want the GH icon in the toolbar to disappear when there are no new notifications.
 
+Enable &lt;i>Notification count over icon&lt;/i> to show the notification count on top of the GH icon instead of beside it.
+
+Enable &lt;i>participating only&lt;/i> to only receive notifications for things you are participating in. See the GH docs for details.
+
+Enable &lt;i>Show alert for notifications&lt;/i> to receive a Gnome notification when a new GH notification arrives.
+
+Set &lt;i>Update interval&lt;/i> to the number of seconds to wait before checking for new notifications.
                                                         </property>
                                                         <property name="use-markup">1</property>
                                                         <property name="wrap">1</property>
@@ -552,8 +366,6 @@ If you have multiple accounts, you may want to choose a color for each account. 
                                                 </child>
                                                 <child type="label">
                                                     <object class="GtkLabel">
-                                                        <!--<property name="xpad">10</property>-->
-                                                        <!--<property name="ypad">5</property>-->
                                                         <property name="label" translatable="yes">Options</property>
                                                     </object>
                                                 </child>
@@ -563,11 +375,6 @@ If you have multiple accounts, you may want to choose a color for each account. 
                                                 </layout>
                                             </object>
                                         </child>
-                                        <!--
-                                        <child>
-                                        <placeholder/>
-                                        </child>
-                                        -->
                                     </object>
                                 </child>
                             </object>
